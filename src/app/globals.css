@@ -1,26 +1,90 @@
 @import "tailwindcss";
 
+/* Custom light: variant - applies styles when NOT in dark mode */
+@variant light (&:where(:not(.dark) *));
+
 :root {
+  --background: #030712;
+  --foreground: #f1f5f9;
+  --primary: #3b82f6;
+  --secondary: #06b6d4;
+}
+
+html.dark {
+  --background: #030712;
+  --foreground: #f1f5f9;
+  color-scheme: dark;
+}
+
+html:not(.dark) {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1e293b;
+  color-scheme: light;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fade Up Animation */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
+/* Scroll triggered animation */
+@supports (animation-timeline: view()) {
+  .animate-fade-up {
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
 }
