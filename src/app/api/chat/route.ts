@@ -1,18 +1,20 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { GoogleGenAI, Type } from '@google/genai'
 import { NextRequest, NextResponse } from 'next/server'
+import { generateImage } from '@/lib/image-generator'
 
-// Inisialisasi Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
+// Inisialisasi Gemini AI dengan SDK baru
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
-// System prompt - GANTI SESUAI PERSONALITY BOT KAMU!
+// System prompt
 const SYSTEM_PROMPT = `Kamu adalah Putra Bot, asisten virtual AI yang cerdas dan berpengetahuan luas untuk website portfolio Andi Putra Fathahillah.
 
 TENTANG ANDI PUTRA FATHAHILLAH:
 - Seorang siswa SMK berbakat yang sedang magang di Ashari Tech
-- Lahir di Makassar pada tanggal 24 Agustus 2008, tinggal di Makassar
-- Bersekolah di SMK Telkom Makassar jurusan RPL 
+- Lahir di Makassar pada tanggal 24 Agustus 2008
+- Bersekolah di SMK Telkom Makassar jurusan RPL
 - Sedang belajar web development dengan Next.js
 - Senang belajar UI/UX Design
+- Sekarang sedang berada di Bandung untuk magang di Ashari Tech
 - Ini adalah website portofolio pribadi untuk menampilkan karya dan skill
 - Hobi: Main Game, Nonton Film, Membaca Buku, Mendengarkan Musik
 - Skill: CSS, Tailwind CSS, Next.js, React, UI/UX Design
@@ -22,6 +24,11 @@ KEMAMPUAN KAMU:
 - Kamu bisa memberikan tips dan saran tentang belajar coding
 - Kamu bisa menjelaskan konsep teknis dengan bahasa yang mudah dipahami
 - Kamu sangat mengenal Andi Putra dan bisa menceritakan tentang dia
+
+PENTING: Kamu memiliki kemampuan untuk MEMBUAT GAMBAR!
+- Jika user meminta kamu membuat/generate/buat gambar, gunakan tool generate_image
+- Jelaskan dulu apa yang akan kamu buat, lalu gunakan tool
+- Contoh: "Baik, saya akan membuatkan gambar [deskripsi] untuk kamu!"
 
 CARA KAMU MENJAWAB:
 - Gunakan bahasa Indonesia yang santai, ramah, tapi tetap informatif
@@ -35,30 +42,57 @@ CARA KAMU MENJAWAB:
 
 LARANGAN:
 - Jangan gunakan tanda kutip untuk membungkus respons
-- Jangan gunakan emoji bintang {*}
+- Jangan gunakan tanda bintang {*}
 - Jangan menjawab pertanyaan tidak pantas atau berbahaya
 - Jangan berpura-pura menjadi orang lain selain Putra Bot
 - Jangan memberikan informasi pribadi yang sensitif`
+
+// Definisi Tool untuk generate gambar
+const imageGenerationTool = {
+    functionDeclarations: [
+        {
+            name: 'generate_image',
+            description: 'Generate gambar berdasarkan deskripsi dari user. Gunakan tool ini ketika user meminta untuk membuat, generate, atau menggambar sesuatu.',
+            parameters: {
+                type: Type.OBJECT,
+                properties: {
+                    prompt: {
+                        type: Type.STRING,
+                        description: 'Deskripsi detail gambar yang ingin dibuat dalam bahasa Inggris. Contoh: "a cute orange cat wearing a small blue hat, digital art style"',
+                    },
+                },
+                required: ['prompt'],
+            },
+        },
+    ],
+}
 
 // Helper function untuk delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 // Function untuk generate content dengan retry
-async function generateWithRetry(model: any, contents: any, maxRetries = 3) {
+async function generateWithRetry(contents: any, maxRetries = 5) {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
-            const result = await model.generateContent({ contents })
+            const result = await ai.models.generateContent({
+                model: 'gemini-2.5-flash',
+                contents: contents,
+                config: {
+                    tools: [imageGenerationTool],
+                },
+            })
             return result
         } catch (error: any) {
-            // Check if it's a rate limit error (429)
-            if (error?.status === 429 || error?.message?.includes('429') || error?.message?.includes('Too Many Requests')) {
-                if (attempt < maxRetries) {
-                    // Wait dengan exponential backoff: 2s, 4s, 8s...
-                    const waitTime = Math.pow(2, attempt) * 1000
-                    console.log(`Rate limited. Waiting ${waitTime / 1000}s before retry ${attempt + 1}/${maxRetries}...`)
-                    await delay(waitTime)
-                    continue
-                }
+            const isRateLimited = error?.status === 429 || error?.message?.includes('429') || error?.message?.includes('Too Many Requests')
+            const isOverloaded = error?.status === 503 || error?.message?.includes('503') || error?.message?.includes('overloaded') || error?.message?.includes('UNAVAILABLE')
+
+            // Retry untuk rate limit atau overloaded
+            if ((isRateLimited || isOverloaded) && attempt < maxRetries) {
+                // Wait dengan exponential backoff: 2s, 4s, 8s, 16s, 32s
+                const waitTime = Math.pow(2, attempt) * 1000
+                console.log(`${isRateLimited ? 'Rate limited' : 'Model overloaded'}. Waiting ${waitTime / 1000}s before retry ${attempt + 1}/${maxRetries}...`)
+                await delay(waitTime)
+                continue
             }
             throw error
         }
@@ -84,9 +118,6 @@ export async function POST(request: NextRequest) {
             parts: [{ text: msg.content }],
         })) || []
 
-        // Generate response dari Gemini
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
-
         const contents = [
             // System instruction
             {
@@ -107,15 +138,51 @@ export async function POST(request: NextRequest) {
         ]
 
         // Generate dengan retry
-        const result = await generateWithRetry(model, contents, 3)
+        const response = await generateWithRetry(contents, 3)
 
-        // Ambil text response
-        const aiResponse = result.response.text()
+        // Cek apakah AI mau pakai tool
+        const functionCalls = response?.functionCalls
+
+        if (functionCalls && functionCalls.length > 0) {
+            const functionCall = functionCalls[0]
+
+            if (functionCall.name === 'generate_image') {
+                const imagePrompt = functionCall.args?.prompt as string
+
+                try {
+                    // Generate gambar
+                    const imageData = await generateImage(imagePrompt)
+
+                    if (imageData) {
+                        return NextResponse.json({
+                            success: true,
+                            message: `Ini dia gambar yang kamu minta! 🎨`,
+                            image: imageData,
+                            imagePrompt: imagePrompt,
+                        })
+                    } else {
+                        return NextResponse.json({
+                            success: true,
+                            message: 'Maaf, saya tidak bisa membuat gambar saat ini. Coba lagi ya!',
+                        })
+                    }
+                } catch (error) {
+                    console.error('Image generation failed:', error)
+                    return NextResponse.json({
+                        success: true,
+                        message: 'Maaf, terjadi kesalahan saat membuat gambar. Coba lagi nanti ya!',
+                    })
+                }
+            }
+        }
+
+        // Response text biasa (tanpa tool call)
+        const textResponse = response?.text
 
         // Return response
         return NextResponse.json({
             success: true,
-            message: aiResponse,
+            message: textResponse,
         })
 
     } catch (error: any) {

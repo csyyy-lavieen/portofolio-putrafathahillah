@@ -7,64 +7,47 @@ export default function Projects() {
   const projects = [
     {
       id: 1,
-      title: 'E-Commerce Platform',
-      description: 'Platform e-commerce modern dengan fitur katalog produk, keranjang belanja, dan sistem pembayaran terintegrasi.',
-      image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop&q=80',
-      tags: ['React', 'Next.js', 'Tailwind CSS'],
-      status: 'Coming Soon',
+      title: 'Intern in Ashari.tech',
+      description: 'Perusahaan teknologi AI Indonesia yang menyediakan solusi AI custom, technology consulting, dan digital transformation untuk UKM dan enterprise di seluruh Indonesia.',
+      image: '/intern.jpg',
+      tags: ['AI Developer', 'Next.js'],
+      status: 'Ongoing',
     },
     {
       id: 2,
-      title: 'Task Management App',
-      description: 'Aplikasi manajemen tugas dengan fitur drag-and-drop, prioritas task, dan reminder notifikasi real-time.',
-      image: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&h=400&fit=crop&q=80',
-      tags: ['React', 'TypeScript', 'Firebase'],
-      status: 'Coming Soon',
+      title: 'Grab and Ship',
+      description: 'Grab and Ship adalah platform e-commerce yang menghadirkan pengalaman belanja lintas negara secara mudah, aman, dan terpercaya.',
+      image: '/grabandship.png',
+      tags: ['Figma', 'Next.js'],
+      status: 'Completed',
     },
     {
       id: 3,
-      title: 'Social Media Dashboard',
-      description: 'Dashboard analytics untuk menganalisis performa konten di berbagai platform media sosial dengan visualisasi data.',
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop&q=80',
-      tags: ['Next.js', 'Chart.js', 'API'],
-      status: 'Coming Soon',
-    },
-    {
-      id: 4,
-      title: 'AI Chat Assistant',
-      description: 'Aplikasi chatbot bertenaga AI untuk customer service dan support otomatis dengan response time cepat.',
-      image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop&q=80',
-      tags: ['Python', 'React', 'Machine Learning'],
-      status: 'Coming Soon',
-    },
-    {
-      id: 5,
-      title: 'Weather Forecast App',
-      description: 'Aplikasi cuaca real-time dengan notifikasi alerts dan prediksi jangka panjang yang akurat.',
-      image: 'https://images.unsplash.com/photo-1592210454359-9043f067919b?w=600&h=400&fit=crop&q=80',
-      tags: ['React', 'Weather API', 'Tailwind'],
-      status: 'Coming Soon',
-    },
-    {
-      id: 6,
-      title: 'Design System',
-      description: 'Component library dan design system lengkap dengan dokumentasi untuk konsistensi design di berbagai project.',
-      image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=400&fit=crop&q=80',
-      tags: ['Figma', 'Storybook', 'React'],
-      status: 'Coming Soon',
+      title: 'E-Commerce Platform',
+      description: 'Strimfil adalah web menonton film gratis. Di web ini kita bisa menonton film dari berbagai negara, dengan genre yang beragam. .',
+      image: '/Strimfilm.png',
+      tags: ['Next.js', 'Figma'],
+      status: 'Completed',
     },
   ];
 
   return (
-    <section id="projects" className="relative py-24 bg-white dark:bg-black border-t border-neutral-200 dark:border-neutral-800 overflow-hidden transition-colors duration-300">
-      <div className="max-w-5xl mx-auto px-6">
+    <section id="projects" className="relative py-16 sm:py-24 bg-white dark:bg-black border-t border-neutral-200 dark:border-neutral-800 overflow-hidden transition-colors duration-300">
+      {/* Background Decorations */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 right-0 w-80 h-80 bg-gradient-to-bl from-neutral-100/60 to-transparent dark:from-neutral-900/40 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-0 w-96 h-96 bg-gradient-to-tr from-neutral-100/60 to-transparent dark:from-neutral-900/40 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-gradient-to-l from-neutral-200/30 to-transparent dark:from-neutral-800/20 rounded-full blur-2xl" />
+      </div>
+
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-5xl font-bold text-black dark:text-white mb-4">
             <BlurText text="Upcoming Projects" delay={100} />
           </h2>
           <p className="text-xl text-neutral-500 max-w-2xl mx-auto animate-fade-up animation-delay-200">
-            Proyek-proyek menarik yang sedang saya kerjakan dan akan segera diluncurkan
+            A collection of projects I’ve built during my learning journey and internship, focusing on real-world problem solving, clean code, and modern web technologies.
           </p>
         </div>
 
@@ -125,7 +108,7 @@ export default function Projects() {
         {/* Info */}
         <div className="mt-16 text-center">
           <p className="text-neutral-500 text-lg animate-fade-up">
-            Lebih banyak project akan datang. Nantikan update terbaru.
+            More projects are currently in progress. Stay tuned for upcoming updates.
           </p>
         </div>
       </div>
