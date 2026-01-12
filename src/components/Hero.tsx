@@ -62,11 +62,11 @@ export default function Hero() {
             </p>
 
             <div className="space-y-4 mb-8">
-              <p className="text-neutral-500 leading-relaxed text-lg max-w-2xl animate-fade-up animation-delay-300">
+              <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed text-lg max-w-2xl animate-fade-up animation-delay-300">
                 Siswa SMK Telkom Makassar jurusan RPL yang sedang menjalani internship di{' '}
                 <span className="text-black dark:text-white font-semibold">PT Ashari Tech, Bandung</span>.
               </p>
-              <p className="text-neutral-500 leading-relaxed text-lg max-w-2xl animate-fade-up animation-delay-400">
+              <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed text-lg max-w-2xl animate-fade-up animation-delay-400">
                 Bersemangat dalam menciptakan pengalaman digital yang memukau dengan fokus pada detail dan pengalaman pengguna.
               </p>
             </div>

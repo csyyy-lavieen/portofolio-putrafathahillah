@@ -47,7 +47,7 @@ export default function Projects() {
           <h2 className="text-5xl font-bold text-black dark:text-white mb-4">
             <BlurText text="Upcoming Projects" delay={100} />
           </h2>
-          <p className="text-xl text-neutral-500 max-w-2xl mx-auto animate-fade-up animation-delay-200">
+          <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto animate-fade-up animation-delay-200">
             A collection of projects I’ve built during my learning journey and internship, focusing on real-world problem solving, clean code, and modern web technologies.
           </p>
         </div>
@@ -84,7 +84,7 @@ export default function Projects() {
                   <h3 className="text-lg font-bold text-black dark:text-white mb-2 group-hover:translate-x-1 transition-transform duration-300">
                     {project.title}
                   </h3>
-                  <p className="text-neutral-500 text-sm mb-4 line-clamp-2">
+                  <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-4 line-clamp-2">
                     {project.description}
                   </p>
 
@@ -110,7 +110,7 @@ export default function Projects() {
 
         {/* Info */}
         <div className="mt-16 text-center">
-          <p className="text-neutral-500 text-lg animate-fade-up">
+          <p className="text-neutral-600 dark:text-neutral-400 text-lg animate-fade-up">
             More projects are currently in progress. Stay tuned for upcoming updates.
           </p>
         </div>
