@@ -31,6 +31,7 @@ export default function Hero() {
                 alt="Andi Putra Fathahillah"
                 width={384}
                 height={384}
+                sizes="(max-width: 640px) 288px, (max-width: 768px) 320px, 384px"
                 className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out animate-photo-float rounded-3xl"
                 style={{ animationDelay: '800ms' }}
                 priority

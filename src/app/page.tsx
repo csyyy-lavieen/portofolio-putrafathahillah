@@ -17,7 +17,7 @@ const Navbar = dynamic(() => import('@/components/Navbar'), {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white dark:bg-black transition-colors duration-300">
+    <main className="min-h-screen bg-white dark:bg-black transition-colors duration-300">
       <Navbar />
       <Hero />
       <About />
@@ -25,6 +25,6 @@ export default function Home() {
       <Projects />
       <Contact />
       <FloatingChat />
-    </div>
+    </main>
   );
 }

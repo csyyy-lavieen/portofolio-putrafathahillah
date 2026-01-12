@@ -81,7 +81,7 @@ export default function About() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-4">
             <BlurText text="About Me" delay={100} />
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-neutral-500 max-w-2xl mx-auto animate-fade-up animation-delay-200">
+          <p className="text-base sm:text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto animate-fade-up animation-delay-200">
             UI/UX Designer yang memiliki pemahaman tentang web development.
           </p>
         </div>
@@ -114,7 +114,7 @@ export default function About() {
                 <p className="text-3xl sm:text-4xl font-bold text-black dark:text-white mb-1 animate-gradient-text">
                   <CountUp end={stat.value} suffix={stat.suffix} duration={2000} />
                 </p>
-                <p className="text-neutral-500 text-sm sm:text-base">{stat.label}</p>
+                <p className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-base">{stat.label}</p>
               </SpotlightCard>
             ))}
           </div>
@@ -146,7 +146,7 @@ export default function About() {
                   {skillGroup.items.map((skill) => (
                     <div key={skill} className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 bg-black dark:bg-white rounded-full" />
-                      <span className="text-neutral-500 text-sm">{skill}</span>
+                      <span className="text-neutral-600 dark:text-neutral-400 text-sm">{skill}</span>
                     </div>
                   ))}
                 </div>

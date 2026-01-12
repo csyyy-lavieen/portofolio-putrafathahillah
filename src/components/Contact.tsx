@@ -76,10 +76,10 @@ export default function Contact() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-3 sm:mb-4">
             <BlurText text="Let's Collaborate" delay={100} />
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-neutral-500 max-w-2xl mx-auto animate-fade-up animation-delay-200 px-2">
+          <p className="text-base sm:text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto animate-fade-up animation-delay-200 px-2">
             Punya pertanyaan, ide atau mau mengobrol?
           </p>
-          <p className="text-base sm:text-lg md:text-xl text-neutral-500 max-w-2xl mx-auto animate-fade-up animation-delay-200 px-2">
+          <p className="text-base sm:text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto animate-fade-up animation-delay-200 px-2">
             Jangan ragu untuk menghubungi saya
           </p>
         </div>
@@ -97,18 +97,18 @@ export default function Contact() {
                     className="flex items-start gap-3 sm:gap-4 animate-slide-left"
                     style={{ animationDelay: `${(index + 1) * 100}ms` }}
                   >
-                    <span className="text-neutral-500 group-hover:text-black dark:group-hover:text-white transition-colors flex-shrink-0 mt-0.5">{info.icon}</span>
+                    <span className="text-neutral-600 dark:text-neutral-400 group-hover:text-black dark:group-hover:text-white transition-colors flex-shrink-0 mt-0.5">{info.icon}</span>
                     <div className="min-w-0">
                       <p className="font-semibold text-black dark:text-white text-sm sm:text-base">{info.title}</p>
                       {info.isLink ? (
                         <a
                           href={`mailto:${info.value}`}
-                          className="text-neutral-500 hover:text-black dark:hover:text-white transition-colors animated-underline text-sm sm:text-base break-all"
+                          className="text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors animated-underline text-sm sm:text-base break-all"
                         >
                           {info.value}
                         </a>
                       ) : (
-                        <p className="text-neutral-500 text-sm sm:text-base">{info.value}</p>
+                        <p className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-base">{info.value}</p>
                       )}
                     </div>
                   </div>
