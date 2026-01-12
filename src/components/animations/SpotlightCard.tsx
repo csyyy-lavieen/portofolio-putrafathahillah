@@ -16,11 +16,21 @@ export default function SpotlightCard({ children, className = '' }: SpotlightCar
 
         let animationFrameId: number;
 
+        let rect: DOMRect | null = null;
+        const updateRect = () => {
+            if (card) rect = card.getBoundingClientRect();
+        };
+
+        // Update rect on mouse enter and scroll/resize
+        card.addEventListener('mouseenter', updateRect);
+        window.addEventListener('resize', updateRect);
+        window.addEventListener('scroll', updateRect);
+
         const handleMouseMove = (e: MouseEvent) => {
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
 
             animationFrameId = requestAnimationFrame(() => {
-                const rect = card.getBoundingClientRect();
+                if (!rect) rect = card.getBoundingClientRect(); // Fallback if rect is null (e.g., first move before mouseenter)
                 const x = ((e.clientX - rect.left) / rect.width) * 100;
                 const y = ((e.clientY - rect.top) / rect.height) * 100;
                 card.style.setProperty('--mouse-x', `${x}%`);
@@ -31,6 +41,9 @@ export default function SpotlightCard({ children, className = '' }: SpotlightCar
         card.addEventListener('mousemove', handleMouseMove);
         return () => {
             card.removeEventListener('mousemove', handleMouseMove);
+            card.removeEventListener('mouseenter', updateRect);
+            window.removeEventListener('resize', updateRect);
+            window.removeEventListener('scroll', updateRect);
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
         };
     }, []);

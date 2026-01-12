@@ -203,17 +203,21 @@ html {
 /* Shine Effect */
 @keyframes shine {
   0% {
-    background-position: -200% center;
+    transform: translateX(-100%);
   }
 
   100% {
-    background-position: 200% center;
+    transform: translateX(100%);
   }
 }
 
 .animate-shine {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  background-size: 200% 100%;
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
   animation: shine 3s linear infinite;
 }
 
