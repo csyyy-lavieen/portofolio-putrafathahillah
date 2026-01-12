@@ -6,16 +6,32 @@ import ClientWrapper from "@/components/ClientWrapper";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: 'swap',
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: "Andi Putra Fathahillah | UI/UX Designer & Frontend Developer",
-  description: "Portfolio profesional Andi Putra Fathahillah. UI/UX Designer & Frontend Developer dari Bandung. Showcasing projects, skills, dan expertise dalam web development.",
+  title: 'Andi Putra Fathahillah - Web Developer Portfolio',
+  description: 'Portfolio Andi Putra Fathahillah, Web Developer Next.js & React',
+  keywords: ['web developer', 'next.js', 'react', 'portfolio'],
+  openGraph: {
+    type: 'website',
+    url: 'https://putrafathahillahporto.vercel.app',
+    title: 'Andi Putra Fathahillah - Web Developer',
+    description: 'Portfolio personal web developer',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Andi Putra Fathahillah - Web Developer',
+    images: ['/og-image.png'],
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({

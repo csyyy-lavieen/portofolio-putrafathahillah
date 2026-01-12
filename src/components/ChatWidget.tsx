@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
+import Image from 'next/image';
 
 interface Message {
   id: string;
@@ -10,6 +11,7 @@ interface Message {
   timestamp: Date;
   isTyping?: boolean;
   image?: string;
+  imagePrompt?: string;
 }
 
 // SVG Icons
@@ -140,7 +142,7 @@ export default function FloatingChat() {
   }, []);
 
   // Fungsi untuk mengirim pesan ke AI API
-  const sendMessageToAI = async (userMessage: string): Promise<{ message: string; image?: string }> => {
+  const sendMessageToAI = async (userMessage: string): Promise<{ message: string; image?: string; imagePrompt?: string }> => {
     try {
       const history = messages.slice(-MAX_HISTORY_MESSAGES).map((msg) => ({
         role: msg.sender === 'user' ? 'user' : 'assistant',
@@ -167,6 +169,7 @@ export default function FloatingChat() {
       return {
         message: data.message,
         image: data.image || undefined,
+        imagePrompt: data.imagePrompt || undefined,
       };
     } catch (error) {
       console.error('Error calling AI:', error);
@@ -216,7 +219,7 @@ export default function FloatingChat() {
   };
 
   // Gallery Logic
-  const allImages = messages.filter(m => m.image).map(m => ({ url: m.image!, prompt: m.text }));
+  const allImages = messages.filter(m => m.image).map(m => ({ url: m.image!, prompt: m.imagePrompt || m.text }));
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
@@ -329,6 +332,7 @@ export default function FloatingChat() {
         sender: 'bot',
         timestamp: new Date(),
         image: aiResponse.image || undefined,
+        imagePrompt: aiResponse.imagePrompt || undefined,
       };
 
       if (audioRef.current) {
@@ -389,6 +393,7 @@ export default function FloatingChat() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-14 h-14 sm:w-16 sm:h-16 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-2xl shadow-black/20 dark:shadow-white/20 hover:scale-110 transition-all duration-300 flex items-center justify-center z-40 group animate-glow"
+        aria-label={isOpen ? "Tutup chat" : "Buka chat"}
       >
         <span className={`group-hover:scale-110 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
           <ChatBotIcon />
@@ -426,6 +431,7 @@ export default function FloatingChat() {
                 onClick={() => setShowGallery(!showGallery)}
                 className="text-neutral-400 dark:text-neutral-600 hover:text-blue-500 dark:hover:text-blue-400 w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-110 hover:bg-neutral-800 dark:hover:bg-neutral-100"
                 title="Galery Photo"
+                aria-label="Buka galeri foto"
               >
                 <GalleryIcon />
               </button>
@@ -435,6 +441,7 @@ export default function FloatingChat() {
                 onClick={clearChat}
                 className="text-neutral-400 dark:text-neutral-600 hover:text-red-400 dark:hover:text-red-500 w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-110 hover:bg-neutral-800 dark:hover:bg-neutral-100"
                 title="Clear chat"
+                aria-label="Hapus riwayat chat"
               >
                 <TrashIcon />
               </button>
@@ -443,7 +450,8 @@ export default function FloatingChat() {
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="text-neutral-400 dark:text-neutral-600 hover:text-white dark:hover:text-black w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-110 hover:bg-neutral-800 dark:hover:bg-neutral-100"
-                title={isExpanded ? "Zoom In": "Zoom Out"}
+                title={isExpanded ? "Zoom In" : "Zoom Out"}
+                aria-label={isExpanded ? "Kecilkan chat" : "Perbesar chat"}
               >
                 {isExpanded ? <MinimizeIcon /> : <ExpandIcon />}
               </button>
@@ -456,6 +464,7 @@ export default function FloatingChat() {
                 }}
                 className="text-neutral-400 dark:text-neutral-600 hover:text-white dark:hover:text-black w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-110 hover:bg-neutral-800 dark:hover:bg-neutral-100"
                 title="Close"
+                aria-label="Tutup chat"
               >
                 <CloseIcon />
               </button>
@@ -511,11 +520,14 @@ export default function FloatingChat() {
                             {/* Gambar (jika ada) */}
                             {msg.image && (
                               <div className="mt-3 relative group">
-                                <img
+                                <Image
                                   src={msg.image}
-                                  alt="Generated image"
-                                  className="rounded-lg max-w-full cursor-pointer hover:opacity-90 transition-opacity border border-neutral-200 dark:border-neutral-700"
+                                  alt={msg.imagePrompt || "AI Generated artwork"}
+                                  width={300}
+                                  height={300}
+                                  className="rounded-lg max-w-full cursor-pointer hover:opacity-90 transition-opacity border border-neutral-200 dark:border-neutral-700 object-cover"
                                   onClick={() => setLightboxImage(msg.image || null)}
+                                  unoptimized
                                 />
                                 {/* Image Actions Overlay */}
                                 <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 backdrop-blur-md p-1 rounded-lg">
@@ -576,6 +588,7 @@ export default function FloatingChat() {
                                 }}
                                 className="flex items-center gap-1 text-xs text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
                                 title="Copy response"
+                                aria-label="Salin pesan"
                               >
                                 {copiedId === msg.id ? (
                                   <>
@@ -662,6 +675,7 @@ export default function FloatingChat() {
                 onClick={() => handleSendMessage()}
                 disabled={isLoading || !input.trim()}
                 className="w-11 h-11 sm:w-12 sm:h-12 bg-black dark:bg-white text-white dark:text-black rounded-xl hover:bg-neutral-800 dark:hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center hover:scale-105 active:scale-95"
+                aria-label="Kirim pesan"
               >
                 <SendIcon />
               </button>
@@ -690,11 +704,14 @@ export default function FloatingChat() {
           >
             <CloseIcon />
           </button>
-          <img
+          <Image
             src={lightboxImage}
-            alt="Full size"
-            className="max-w-full max-h-[90vh] rounded-xl shadow-2xl animate-scale-in"
+            alt="Full size view of AI generated artwork"
+            width={800}
+            height={800}
+            className="max-w-full max-h-[90vh] rounded-xl shadow-2xl animate-scale-in object-contain"
             onClick={(e) => e.stopPropagation()}
+            unoptimized
           />
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4">
             <button
@@ -737,7 +754,14 @@ export default function FloatingChat() {
             ) : (
               allImages.map((img, idx) => (
                 <div key={idx} className="relative group aspect-square rounded-xl overflow-hidden cursor-pointer" onClick={() => setLightboxImage(img.url)}>
-                  <img src={img.url} alt={`Gallery ${idx}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <Image
+                    src={img.url}
+                    alt={img.prompt || `Gallery image ${idx + 1}`}
+                    width={200}
+                    height={200}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    unoptimized
+                  />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                     <button onClick={(e) => { e.stopPropagation(); setLightboxImage(img.url); }} className="p-2 bg-white/20 rounded-full text-white hover:bg-white/40"><ZoomIcon /></button>
                     <button onClick={(e) => { e.stopPropagation(); handleDownload(img.url, `gallery-${idx}.png`); }} className="p-2 bg-white/20 rounded-full text-white hover:bg-white/40"><DownloadIcon /></button>

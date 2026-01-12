@@ -73,6 +73,7 @@ export default function Hero() {
               <a
                 href="#projects"
                 className="group px-8 py-4 bg-black dark:bg-white text-white dark:text-black font-bold rounded-lg hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-all hover:scale-105 text-center relative overflow-hidden"
+                aria-label="Lihat project saya"
               >
                 <span className="relative z-10">View My Projects</span>
                 <div className="absolute inset-0 animate-shine" />
@@ -80,6 +81,7 @@ export default function Hero() {
               <a
                 href="#contact"
                 className="group px-8 py-4 border-2 border-neutral-400 dark:border-neutral-600 text-black dark:text-white font-bold rounded-lg hover:border-black dark:hover:border-white hover:bg-black/5 dark:hover:bg-white/5 transition-all hover:scale-105 text-center"
+                aria-label="Hubungi saya"
               >
                 <span className="relative z-10">Contact Me</span>
               </a>
